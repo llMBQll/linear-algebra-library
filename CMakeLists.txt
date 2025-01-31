@@ -50,7 +50,7 @@ set(MBQ_SOURCES ${MBQ_SOURCES} ${MBQ_HOST_BACKEND})
 add_compile_definitions(MBQ_ENABLE_CUDA=${MBQ_ENABLE_CUDA})
 
 if (${MBQ_ENABLE_CUDA})
-    set(CMAKE_CUDA_STANDARD 17)
+    set(CMAKE_CUDA_STANDARD 20)
     set(CMAKE_CUDA_ARCHITECTURES "75")
     find_package(CUDAToolkit)
 
