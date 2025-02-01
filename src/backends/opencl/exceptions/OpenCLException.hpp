@@ -104,9 +104,11 @@ namespace mbq
     private:
         status_t _status;
     public:
-        explicit OpenCLException(SourceLocation location) : Exception(location), _status(UNKNOWN) { }
+        explicit OpenCLException(const std::source_location& location = {}) : Exception(location), _status(UNKNOWN) { }
 
-        explicit OpenCLException(status_t status, SourceLocation location) : Exception(location), _status(status) { }
+        explicit OpenCLException(status_t status, const std::source_location& location = {})
+            : Exception(location), _status(status)
+        { }
 
         OpenCLException(const OpenCLException&) noexcept = default;
 

@@ -30,15 +30,13 @@ namespace mbq::opencl
         template <typename... Args>
         static void set_args(cl_kernel kernel, Args... args)
         {
-            constexpr auto check = [](cl_int status, mbq::SourceLocation location) {
+            constexpr auto check = [](cl_int status, const std::source_location& location = {}) {
                 if (status != CL_SUCCESS)
-                    MBQ_THROW_EXCEPTION_WITH_LOCATION(OpenCLException, status, location);
+                    MBQ_THROW_EXCEPTION(OpenCLException, status, location);
             };
 
             cl_uint index = 0;
-            (check(clSetKernelArg(kernel, index++, sizeof(Args), static_cast<const void*>(&args)),
-                   MBQ_SOURCE_LOCATION_CURRENT),
-             ...);
+            (check(clSetKernelArg(kernel, index++, sizeof(Args), static_cast<const void*>(&args))), ...);
         }
 
         [[noreturn]] static void exit_with_compile_error(Context* ctx, cl_program program)
@@ -135,7 +133,7 @@ namespace mbq::opencl
             struct sequential
             { };
         } // namespace execution_policy
-    }     // namespace detail
+    } // namespace detail
 
     template <typename...>
     class Kernel;

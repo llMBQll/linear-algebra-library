@@ -11,11 +11,11 @@ namespace mbq
     private:
         cudaError_t _error;
     public:
-        CudaException(SourceLocation location)
+        CudaException(const std::source_location& location = {})
             : Exception(cudaGetErrorString(cudaError::cudaErrorUnknown), location), _error(cudaError::cudaErrorUnknown)
         { }
 
-        CudaException(cudaError_t error, SourceLocation location)
+        CudaException(cudaError_t error, const std::source_location& location = {})
             : Exception(cudaGetErrorString(error), location), _error(error)
         { }
 

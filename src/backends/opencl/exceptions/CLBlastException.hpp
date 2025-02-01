@@ -92,9 +92,11 @@ namespace mbq
     private:
         status_t _status;
     public:
-        explicit CLBlastException(SourceLocation location) : Exception(location), _status(UNKNOWN) { }
+        explicit CLBlastException(const std::source_location& location = {}) : Exception(location), _status(UNKNOWN) { }
 
-        explicit CLBlastException(status_t status, SourceLocation location) : Exception(location), _status(status) { }
+        explicit CLBlastException(status_t status, const std::source_location& location = {})
+            : Exception(location), _status(status)
+        { }
 
         CLBlastException(const CLBlastException&) noexcept = default;
 

@@ -37,11 +37,12 @@ namespace mbq
     private:
         cublasStatus_t _status;
     public:
-        explicit CublasException(SourceLocation location)
+        explicit CublasException(const std::source_location& location = {})
             : Exception(location), _status(static_cast<cublasStatus_t>(-1))
         { }
 
-        explicit CublasException(cublasStatus_t status, SourceLocation location) : Exception(location), _status(status)
+        explicit CublasException(cublasStatus_t status, const std::source_location& location = {})
+            : Exception(location), _status(status)
         { }
 
         CublasException(const CublasException&) noexcept = default;

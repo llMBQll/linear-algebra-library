@@ -49,7 +49,7 @@ namespace mbq::cuda
             auto res = cudaFree(memory);
             if (res != cudaError::cudaSuccess)
             {
-                std::cerr << CudaException{res, MBQ_SOURCE_LOCATION_CURRENT} << std::endl;
+                std::cerr << CudaException{res} << std::endl;
                 exit(res);
             }
         }

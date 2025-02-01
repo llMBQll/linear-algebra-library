@@ -1,22 +1,15 @@
 #pragma once
 
-#include "SourceLocation.hpp"
-
 #include <exception>
+#include <source_location>
 
 #define MBQ_MAKE_EXCEPTION(m__type, ...)                                                                               \
     m__type                                                                                                            \
     {                                                                                                                  \
-        __VA_ARGS__ __VA_OPT__(, ) MBQ_SOURCE_LOCATION_CURRENT                                                         \
-    }
-#define MBQ_MAKE_EXCEPTION_WITH_LOCATION(m__type, ...)                                                                 \
-    m__type                                                                                                            \
-    {                                                                                                                  \
         __VA_ARGS__                                                                                                    \
     }
+
 #define MBQ_THROW_EXCEPTION(m__type, ...) ::mbq::throw_exception(MBQ_MAKE_EXCEPTION(m__type, __VA_ARGS__))
-#define MBQ_THROW_EXCEPTION_WITH_LOCATION(m__type, ...)                                                                \
-    ::mbq::throw_exception(MBQ_MAKE_EXCEPTION_WITH_LOCATION(m__type, __VA_ARGS__))
 
 #ifndef MBQ_EXCEPTIONS
     #define MBQ_EXCEPTIONS 1
@@ -38,11 +31,14 @@ namespace mbq
     {
     private:
         const char* _message;
-        SourceLocation _location;
+        std::source_location _location;
     public:
-        explicit Exception(SourceLocation location) : _message("mbq::Exception"), _location(location) { }
+        explicit Exception(const std::source_location& location = {}) : _message("mbq::Exception"), _location(location)
+        { }
 
-        explicit Exception(const char* message, SourceLocation location) : _message(message), _location(location) { }
+        explicit Exception(const char* message, const std::source_location& location = {})
+            : _message(message), _location(location)
+        { }
 
         Exception(const Exception&) noexcept = default;
 
@@ -53,7 +49,7 @@ namespace mbq
             return _message;
         }
 
-        [[nodiscard]] const SourceLocation& location() const noexcept
+        [[nodiscard]] const std::source_location& location() const noexcept
         {
             return _location;
         }
