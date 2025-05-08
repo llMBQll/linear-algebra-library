@@ -42,9 +42,8 @@ namespace mbq
             std::uniform_real_distribution<value_type> dist{min.real(), max.real()};
             auto& engine = host::detail::get_default_engine();
 
-            std::transform(first, last, first, [&engine, &dist](const auto&) -> T {
-                return {dist(engine), dist(engine)};
-            });
+            std::transform(first, last, first,
+                           [&engine, &dist](const auto&) -> T { return {dist(engine), dist(engine)}; });
         }
     } // namespace host::detail
 

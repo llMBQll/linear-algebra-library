@@ -7,8 +7,7 @@
 namespace mbq
 {
     template <typename T>
-    concept non_void = !
-    std::is_same_v<T, void>;
+    concept non_void = !std::is_same_v<T, void>;
 
     template <typename T>
     concept integral = std::is_integral_v<T>;

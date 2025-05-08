@@ -21,11 +21,9 @@ namespace mbq
             static std::array<size_t, N> to_array(const std::tuple<Ts...>& tuple)
             {
                 // tuple is actually of type <size_t, size_t, ..., Allocator> with N size_t elements
-                return [&tuple]<size_t... Indices>(std::index_sequence<Indices...>)->std::array<size_t, N>
-                {
+                return [&tuple]<size_t... Indices>(std::index_sequence<Indices...>) -> std::array<size_t, N> {
                     return {static_cast<size_t>(std::get<Indices>(tuple))...};
-                }
-                (std::make_index_sequence<N>());
+                }(std::make_index_sequence<N>());
             }
         public:
             Allocator _allocator;

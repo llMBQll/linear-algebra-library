@@ -185,15 +185,15 @@ namespace mbq
         bool operator<=>(const Reference&) const noexcept = default;
 
         template <typename Rhs>
-            requires convertible_to<value_type, Rhs> bool
-        operator==(const Rhs& rhs) const
+            requires convertible_to<value_type, Rhs>
+        bool operator==(const Rhs& rhs) const
         {
             return get_value() == rhs;
         }
 
         template <typename Rhs>
-            requires convertible_to<value_type, Rhs> bool
-        operator<=>(const Rhs& rhs) const
+            requires convertible_to<value_type, Rhs>
+        bool operator<=>(const Rhs& rhs) const
         {
             return get_value() <=> rhs;
         }

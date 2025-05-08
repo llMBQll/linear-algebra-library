@@ -70,17 +70,16 @@ namespace mbq
     };
 
     template <typename T, typename Alloc>
-    concept allocator_requirement =
-        requires(Alloc a) {
-            typename Alloc::value_type;
-            {
-                a.allocate(std::declval<typename AllocatorTraits<Alloc>::size_type>())
-                } -> std::same_as<typename AllocatorTraits<Alloc>::pointer>;
-            {
-                a.deallocate(std::declval<typename AllocatorTraits<Alloc>::pointer>(),
-                             std::declval<typename AllocatorTraits<Alloc>::size_type>())
-            };
-        } && std::same_as<typename Alloc::value_type, T> && std::is_default_constructible_v<Alloc>;
+    concept allocator_requirement = requires(Alloc a) {
+        typename Alloc::value_type;
+        {
+            a.allocate(std::declval<typename AllocatorTraits<Alloc>::size_type>())
+        } -> std::same_as<typename AllocatorTraits<Alloc>::pointer>;
+        {
+            a.deallocate(std::declval<typename AllocatorTraits<Alloc>::pointer>(),
+                         std::declval<typename AllocatorTraits<Alloc>::size_type>())
+        };
+    } && std::same_as<typename Alloc::value_type, T> && std::is_default_constructible_v<Alloc>;
 
     template <typename T, typename Alloc>
     concept host_allocator = std::same_as<typename AllocatorTraits<Alloc>::dereferenceable, std::true_type> &&
