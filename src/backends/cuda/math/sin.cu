@@ -7,7 +7,7 @@
     template <typename T>                                                                                              \
     struct m__cls                                                                                                      \
     {                                                                                                                  \
-        __host__ __device__ T operator()(T x)                                                                          \
+        __host__ __device__ __inline__ T operator()(T x)                                                               \
         {                                                                                                              \
             using namespace mbq::cuda;                                                                                 \
             return m__fn(x);                                                                                           \

@@ -1,5 +1,6 @@
 #include "random.cuh"
 
+#include <bit>
 #include <complex>
 #include <random>
 
@@ -46,8 +47,8 @@ namespace mbq::cuda::detail
                           std::complex<float> /*max*/)
     {
         auto& engine = get_default_engine();
-        // cast to float and multiply count times 2 to account for ral and imaginary parts
-        return curandGenerateUniform(engine.generator, reinterpret_cast<float*>(ptr), count * 2);
+        // cast to float and multiply count times 2 to account for real and imaginary parts
+        return curandGenerateUniform(engine.generator, std::bit_cast<float*>(ptr), count * 2);
     }
 
     template <>
@@ -55,7 +56,7 @@ namespace mbq::cuda::detail
                           std::complex<double> /*max*/)
     {
         auto& engine = get_default_engine();
-        // cast to double and multiply count times 2 to account for ral and imaginary parts
-        return curandGenerateUniformDouble(engine.generator, reinterpret_cast<double*>(ptr), count * 2);
+        // cast to double and multiply count times 2 to account for real and imaginary parts
+        return curandGenerateUniformDouble(engine.generator, std::bit_cast<double*>(ptr), count * 2);
     }
 } // namespace mbq::cuda::detail

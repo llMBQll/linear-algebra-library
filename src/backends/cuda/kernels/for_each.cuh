@@ -69,7 +69,7 @@ namespace mbq::cuda::detail
     }
 
     template <typename T>
-    inline cudaError_t launch_for_each(T* inout, size_t size, T value) noexcept
+    cudaError_t launch_for_each(T* inout, size_t size, T value) noexcept
     {
         auto [num_blocks, block_size] = get_launch_params(size);
         for_each<T><<<num_blocks, block_size>>>(inout, size, value);
@@ -77,7 +77,7 @@ namespace mbq::cuda::detail
     }
 
     template <typename T, typename UnaryFn>
-    inline cudaError_t launch_for_each(const T* in, T* out, size_t size) noexcept
+    cudaError_t launch_for_each(const T* in, T* out, size_t size) noexcept
     {
         auto [num_blocks, block_size] = get_launch_params(size);
         for_each<T, UnaryFn><<<num_blocks, block_size>>>(in, out, size);
@@ -85,7 +85,7 @@ namespace mbq::cuda::detail
     }
 
     template <typename T>
-    inline cudaError_t launch_for_each(const T* in, T* out, size_t size, T value) noexcept
+    cudaError_t launch_for_each(const T* in, T* out, size_t size, T value) noexcept
     {
         auto [num_blocks, block_size] = get_launch_params(size);
         for_each<T><<<num_blocks, block_size>>>(in, out, size, value);
@@ -93,7 +93,7 @@ namespace mbq::cuda::detail
     }
 
     template <typename T, typename UnaryFn>
-    inline cudaError_t launch_for_each(const T* in, T* out, size_t size, UnaryFn fn) noexcept
+    cudaError_t launch_for_each(const T* in, T* out, size_t size, UnaryFn fn) noexcept
     {
         auto [num_blocks, block_size] = get_launch_params(size);
         for_each<T, UnaryFn><<<num_blocks, block_size>>>(in, out, size, fn);
@@ -101,7 +101,7 @@ namespace mbq::cuda::detail
     }
 
     template <typename T, typename BinaryFn>
-    inline cudaError_t launch_for_each(const T* x_in, const T* y_in, T* out, size_t size) noexcept
+    cudaError_t launch_for_each(const T* x_in, const T* y_in, T* out, size_t size) noexcept
     {
         auto [num_blocks, block_size] = get_launch_params(size);
         for_each<T, BinaryFn><<<num_blocks, block_size>>>(x_in, y_in, out, size);
@@ -109,7 +109,7 @@ namespace mbq::cuda::detail
     }
 
     template <typename T, typename BinaryFn>
-    inline cudaError_t launch_for_each(const T* x_in, const T* y_in, T* out, size_t size, BinaryFn fn) noexcept
+    cudaError_t launch_for_each(const T* x_in, const T* y_in, T* out, size_t size, BinaryFn fn) noexcept
     {
         auto [num_blocks, block_size] = get_launch_params(size);
         for_each<T, BinaryFn><<<num_blocks, block_size>>>(x_in, y_in, out, size, fn);

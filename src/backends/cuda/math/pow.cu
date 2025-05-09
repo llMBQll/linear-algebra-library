@@ -8,7 +8,7 @@ struct PowFn
 {
     T exponent;
 
-    __host__ __device__ T operator()(T x)
+    __host__ __device__ __inline__ T operator()(T x)
     {
         using namespace mbq::cuda;
         return pow(x, exponent);

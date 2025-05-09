@@ -1,67 +1,68 @@
 #pragma once
 
+#include <bit>
 #include <complex>
 #include <cuComplex.h>
 
 namespace mbq::cuda::detail
 {
-    inline float cuda_cast(float x)
+    __inline__ float cuda_cast(float x)
     {
         return x;
     }
 
-    inline float* cuda_cast(float* x)
+    __inline__ float* cuda_cast(float* x)
     {
         return x;
     }
 
-    inline const float* cuda_cast(const float* x)
+    __inline__ const float* cuda_cast(const float* x)
     {
         return x;
     }
 
-    inline double cuda_cast(double x)
+    __inline__ double cuda_cast(double x)
     {
         return x;
     }
 
-    inline double* cuda_cast(double* x)
+    __inline__ double* cuda_cast(double* x)
     {
         return x;
     }
 
-    inline const double* cuda_cast(const double* x)
+    __inline__ const double* cuda_cast(const double* x)
     {
         return x;
     }
 
-    inline cuFloatComplex cuda_cast(std::complex<float> x)
+    __inline__ cuFloatComplex cuda_cast(std::complex<float> x)
     {
-        return *reinterpret_cast<cuFloatComplex*>(&x);
+        return std::bit_cast<cuFloatComplex>(x);
     }
 
-    inline cuFloatComplex* cuda_cast(std::complex<float>* x)
+    __inline__ cuFloatComplex* cuda_cast(std::complex<float>* x)
     {
-        return reinterpret_cast<cuFloatComplex*>(x);
+        return std::bit_cast<cuFloatComplex*>(x);
     }
 
-    inline const cuFloatComplex* cuda_cast(const std::complex<float>* x)
+    __inline__ const cuFloatComplex* cuda_cast(const std::complex<float>* x)
     {
-        return reinterpret_cast<const cuFloatComplex*>(x);
+        return std::bit_cast<const cuFloatComplex*>(x);
     }
 
-    inline cuDoubleComplex cuda_cast(std::complex<double> x)
+    __inline__ cuDoubleComplex cuda_cast(std::complex<double> x)
     {
-        return *reinterpret_cast<cuDoubleComplex*>(&x);
+        return std::bit_cast<cuDoubleComplex>(x);
     }
 
-    inline cuDoubleComplex* cuda_cast(std::complex<double>* x)
+    __inline__ cuDoubleComplex* cuda_cast(std::complex<double>* x)
     {
-        return reinterpret_cast<cuDoubleComplex*>(x);
+        return std::bit_cast<cuDoubleComplex*>(x);
     }
 
-    inline const cuDoubleComplex* cuda_cast(const std::complex<double>* x)
+    __inline__ const cuDoubleComplex* cuda_cast(const std::complex<double>* x)
     {
-        return reinterpret_cast<const cuDoubleComplex*>(x);
+        return std::bit_cast<const cuDoubleComplex*>(x);
     }
 } // namespace mbq::cuda::detail

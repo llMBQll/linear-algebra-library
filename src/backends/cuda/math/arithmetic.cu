@@ -8,7 +8,7 @@ namespace mbq::cuda::detail
     template <typename T>
     struct AddValues
     {
-        __device__ inline T operator()(T x, T y) const
+        __device__ __inline__ T operator()(T x, T y) const
         {
             return x + y;
         }
@@ -21,7 +21,7 @@ namespace mbq::cuda::detail
         T _value;
     public:
         constexpr explicit AddConstant(const T& value) : _value(value) { }
-        __device__ inline T operator()(T x) const
+        __device__ __inline__ T operator()(T x) const
         {
             return x + _value;
         }
@@ -59,7 +59,7 @@ namespace mbq::cuda::detail
     template <typename T>
     struct SubtractValues
     {
-        __device__ inline T operator()(T x, T y) const
+        __device__ __inline__ T operator()(T x, T y) const
         {
             return x - y;
         }
@@ -72,7 +72,7 @@ namespace mbq::cuda::detail
         T _value;
     public:
         constexpr explicit SubtractConstant(const T& value) : _value(value) { }
-        __device__ inline T operator()(T x) const
+        __device__ __inline__ T operator()(T x) const
         {
             return x - _value;
         }
@@ -85,7 +85,7 @@ namespace mbq::cuda::detail
         T _value;
     public:
         constexpr explicit SubtractConstantReverse(const T& value) : _value(value) { }
-        __device__ inline T operator()(T x) const
+        __device__ __inline__ T operator()(T x) const
         {
             return _value - x;
         }
@@ -139,7 +139,7 @@ namespace mbq::cuda::detail
     template <typename T>
     struct MultiplyValues
     {
-        __device__ inline T operator()(T x, T y) const
+        __device__ __inline__ T operator()(T x, T y) const
         {
             return x * y;
         }
@@ -152,7 +152,7 @@ namespace mbq::cuda::detail
         T _value;
     public:
         constexpr explicit MultiplyConstant(const T& value) : _value(value) { }
-        __device__ inline T operator()(T x) const
+        __device__ __inline__ T operator()(T x) const
         {
             return x * _value;
         }
@@ -190,7 +190,7 @@ namespace mbq::cuda::detail
     template <typename T>
     struct DivideValues
     {
-        __device__ inline T operator()(T x, T y) const
+        __device__ __inline__ T operator()(T x, T y) const
         {
             return x / y;
         }
@@ -203,7 +203,7 @@ namespace mbq::cuda::detail
         T _value;
     public:
         constexpr explicit DivideConstant(const T& value) : _value(value) { }
-        __device__ inline T operator()(T x) const
+        __device__ __inline__ T operator()(T x) const
         {
             return x / _value;
         }
@@ -216,7 +216,7 @@ namespace mbq::cuda::detail
         T _value;
     public:
         constexpr explicit DivideConstantReverse(const T& value) : _value(value) { }
-        __device__ inline T operator()(T x) const
+        __device__ __inline__ T operator()(T x) const
         {
             return _value / x;
         }
