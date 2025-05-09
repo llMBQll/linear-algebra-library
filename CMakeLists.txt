@@ -25,7 +25,7 @@ set(MBQ_ENABLE_OPENCL true)
 
 set(MBQ_SOURCES
     src/algorithm/fill.hpp src/algorithm/random.hpp
-    src/exceptions/Exception.hpp src/exceptions/SourceLocation.hpp
+    src/exceptions/Exception.hpp
     src/math/axpy.hpp src/math/pow.hpp src/math/sin.hpp src/math/arithmetic.hpp src/math/transpose.hpp
     src/memory/AllocatorTraits.hpp src/memory/Copy.hpp src/memory/Memory.hpp src/memory/MemoryBase.hpp
     src/memory/MemoryIterator.hpp src/memory/MemoryView.hpp src/memory/Reference.hpp
