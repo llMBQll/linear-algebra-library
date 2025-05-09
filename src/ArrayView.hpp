@@ -2,7 +2,6 @@
 
 #include "concepts.hpp"
 #include "exceptions/Exception.hpp"
-#include "memory/Memory.hpp"
 #include "memory/MemoryView.hpp"
 
 #include <numeric>
@@ -148,7 +147,7 @@ namespace mbq
 
         ConstArrayView<T, Allocator, N> as_const() const noexcept
         {
-            ConstArrayView<T, Allocator, N>::from(_memory_view, _dimensions);
+            return ConstArrayView<T, Allocator, N>::from(_memory_view, _dimensions);
         }
 
         ret_type operator[](size_t index)

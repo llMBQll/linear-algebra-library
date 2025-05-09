@@ -3,6 +3,7 @@
 #include "algorithm/fill.hpp"
 #include "algorithm/random.hpp"
 #include "ArrayView.hpp"
+#include "memory/Memory.hpp"
 
 #include <array>
 #include <numeric>
