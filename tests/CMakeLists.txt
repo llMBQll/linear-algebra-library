@@ -2,7 +2,13 @@ project(unit_tests)
 
 set(CMAKE_CXX_FLAGS "${DEFAULT_CXX_FLAGS}") #disable warnings when compiling gtest
 
-add_subdirectory(googletest)
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest
+        GIT_TAG v1.17.0
+)
+FetchContent_MakeAvailable(googletest)
 
 add_executable(unit_tests main.cpp Array.cpp math.cpp common.hpp Memory.cpp MemoryView.cpp)
 
