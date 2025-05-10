@@ -1,27 +1,18 @@
 cmake_minimum_required(VERSION 3.17)
-project(test CXX CUDA)
 
-set(CMAKE_CXX_STANDARD 23)
+option(MBQ_ENABLE_CUDA "Enable CUDA backed implementation" ON)
+option(MBQ_ENABLE_OPENCL "Enable OpenCL backed implementation" ON)
+option(MBQ_COMPILE_TESTS "Compile unit tests for the library" OFF)
 
-set(DEFAULT_CXX_FLAGS "${CMAKE_CXX_FLAGS}") # default flags used to compile gtest
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-newline-eof")
-    if (WIN32)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -EHsc")     # enable exceptions on windows
-        set(DEFAULT_CXX_FLAGS "${DEFAULT_CXX_FLAGS} -EHsc") # append exception support to default flags
-        set(LLVM_ENABLE_EH ON)
-    endif ()
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -wd4514 -wd4710 -wd4711 -wd4820 -wd4505")
+if (MBQ_ENABLE_CUDA)
+    project(linear-algebra-library CXX CUDA)
 else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+    project(linear-algebra-library CXX)
 endif ()
 
-message("Compiler flags: ${CMAKE_CXX_FLAGS}")
-
-set(MBQ_ENABLE_CUDA true)
-set(MBQ_ENABLE_OPENCL true)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(MBQ_SOURCES
         src/algorithm/fill.hpp src/algorithm/random.hpp
@@ -55,7 +46,7 @@ if (${MBQ_ENABLE_CUDA})
     find_package(CUDAToolkit)
 
     # Compile kernels to a static library
-    add_library(test_lib_cuda STATIC
+    add_library(linear-algebra-library-cuda STATIC
             src/backends/cuda/algorithm/detail/fill.cu src/backends/cuda/algorithm/detail/fill.cuh
             src/backends/cuda/algorithm/detail/random.cu src/backends/cuda/algorithm/detail/random.cuh
             src/backends/cuda/kernels/common.cuh src/backends/cuda/kernels/for_each.cuh
@@ -63,8 +54,8 @@ if (${MBQ_ENABLE_CUDA})
             src/backends/cuda/math/complex.cuh
             src/backends/cuda/math/pow.cu src/backends/cuda/math/pow.cuh
             src/backends/cuda/math/sin.cu src/backends/cuda/math/sin.cuh)
-    set_property(TARGET test_lib_cuda PROPERTY CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}")
-    target_link_libraries(test_lib_cuda CUDA::cudart_static CUDA::cublas CUDA::curand)
+    set_target_properties(linear-algebra-library-cuda PROPERTIES CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}")
+    target_link_libraries(linear-algebra-library-cuda CUDA::cudart_static CUDA::cublas CUDA::curand)
 
     # Collect all files for CUDA backend
     set(MBQ_CUDA_BACKEND
@@ -107,24 +98,22 @@ if (${MBQ_ENABLE_OPENCL})
     set(MBQ_SOURCES ${MBQ_SOURCES} ${MBQ_OPENCL_BACKEND})
 endif ()
 
-add_library(test_lib INTERFACE ${MBQ_SOURCES})
+add_library(linear-algebra-library INTERFACE ${MBQ_SOURCES})
 
 # Host
-target_link_libraries(test_lib INTERFACE OpenBLAS::OpenBLAS)
+target_link_libraries(linear-algebra-library INTERFACE OpenBLAS::OpenBLAS)
 
 # CUDA
 if (${MBQ_ENABLE_CUDA})
-    target_include_directories(test_lib INTERFACE "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}")
-    target_link_libraries(test_lib INTERFACE test_lib_cuda)
+    target_include_directories(linear-algebra-library INTERFACE "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}")
+    target_link_libraries(linear-algebra-library INTERFACE linear-algebra-library-cuda)
 endif ()
 
 # OpenCL
 if (${MBQ_ENABLE_OPENCL})
-    target_link_libraries(test_lib INTERFACE OpenCL::OpenCL)
-    target_link_libraries(test_lib INTERFACE clblast)
+    target_link_libraries(linear-algebra-library INTERFACE OpenCL::OpenCL)
+    target_link_libraries(linear-algebra-library INTERFACE clblast)
 endif ()
-
-set(MBQ_COMPILE_TESTS true)
 
 if (${MBQ_COMPILE_TESTS})
     add_subdirectory(tests)
