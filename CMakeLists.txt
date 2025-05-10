@@ -124,11 +124,6 @@ if (${MBQ_ENABLE_OPENCL})
     target_link_libraries(test_lib INTERFACE clblast)
 endif ()
 
-# enable c++20 conformant preprocessor for MSVC
-if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(test_lib INTERFACE "/Zc:preprocessor")
-endif ()
-
 set(MBQ_COMPILE_TESTS true)
 
 if (${MBQ_COMPILE_TESTS})

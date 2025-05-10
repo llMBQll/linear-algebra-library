@@ -4,13 +4,7 @@
 #include <format>
 #include <source_location>
 
-#define MBQ_MAKE_EXCEPTION(m__type, ...)                                                                               \
-    m__type                                                                                                            \
-    {                                                                                                                  \
-        __VA_ARGS__                                                                                                    \
-    }
-
-#define MBQ_THROW_EXCEPTION(m__type, ...) ::mbq::throw_exception(MBQ_MAKE_EXCEPTION(m__type, __VA_ARGS__))
+#define MBQ_THROW_EXCEPTION(m__type, ...) ::mbq::throw_exception(m__type{__VA_ARGS__})
 
 #ifndef MBQ_EXCEPTIONS
     #define MBQ_EXCEPTIONS 1
@@ -20,7 +14,7 @@ namespace mbq
 {
 #if MBQ_EXCEPTIONS
     template <typename E>
-    [[noreturn]] inline void throw_exception(const E& e)
+    [[noreturn]] void throw_exception(const E& e)
     {
         throw e;
     }
