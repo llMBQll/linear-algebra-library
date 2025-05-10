@@ -5,7 +5,7 @@
 #include "Context.hpp"
 
 #include <cuda_runtime.h>
-#include <iostream>
+#include <print>
 
 namespace mbq::cuda
 {
@@ -49,7 +49,7 @@ namespace mbq::cuda
             auto res = cudaFree(memory);
             if (res != cudaError::cudaSuccess)
             {
-                std::cerr << CudaException{res} << std::endl;
+                std::println(stderr, "{}", CudaException{res});
                 exit(res);
             }
         }

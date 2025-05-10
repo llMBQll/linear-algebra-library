@@ -171,12 +171,6 @@ namespace mbq
             return lhs / rhs.get_value();
         }
 
-        friend std::ostream& operator<<(std::ostream& out, const Reference& rhs)
-        {
-            out << rhs.get_value();
-            return out;
-        }
-
         pointer operator&()
         {
             return _data;
@@ -288,12 +282,6 @@ namespace mbq
             return lhs / rhs.get_value();
         }
 
-        friend std::ostream& operator<<(std::ostream& out, const ConstReference& rhs)
-        {
-            out << rhs.get_value();
-            return out;
-        }
-
         pointer operator&()
         {
             return _data;
@@ -307,3 +295,33 @@ namespace mbq
         }
     };
 } // namespace mbq
+
+template <mbq::non_void T, typename Memory>
+struct std::formatter<mbq::Reference<T, Memory>>
+{
+    constexpr auto parse(std::format_parse_context& ctx)
+    {
+        return ctx.begin();
+    }
+
+    template <typename FormatContext>
+    auto format(const mbq::Reference<T, Memory>& r, FormatContext& ctx) const
+    {
+        return std::format_to(ctx.out(), "{}", r.get_value());
+    }
+};
+
+template <mbq::non_void T, typename Memory>
+struct std::formatter<mbq::ConstReference<T, Memory>>
+{
+    constexpr auto parse(std::format_parse_context& ctx)
+    {
+        return ctx.begin();
+    }
+
+    template <typename FormatContext>
+    auto format(const mbq::ConstReference<T, Memory>& r, FormatContext& ctx) const
+    {
+        return std::format_to(ctx.out(), "{}", r.get_value());
+    }
+};

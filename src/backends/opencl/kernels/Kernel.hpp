@@ -7,8 +7,8 @@
 #include "backends/opencl/memory/Pointer.hpp"
 
 #include <chrono>
+#include <print>
 #include <unordered_map>
-#include <vector>
 
 namespace mbq::opencl
 {
@@ -47,16 +47,16 @@ namespace mbq::opencl
             status = clGetProgramBuildInfo(program, ctx->device_id, CL_PROGRAM_BUILD_LOG, 0, nullptr, &len);
             if (status != CL_SUCCESS)
             {
-                std::cerr << MBQ_MAKE_EXCEPTION(OpenCLException, status) << std::endl;
-                std::exit(1);
+                std::println(stderr, "{}", OpenCLException{status});
+                std::exit(status);
             }
 
             auto buf = std::make_unique<char[]>(len);
             status = clGetProgramBuildInfo(program, ctx->device_id, CL_PROGRAM_BUILD_LOG, len, buf.get(), nullptr);
             if (status != CL_SUCCESS)
             {
-                std::cerr << MBQ_MAKE_EXCEPTION(OpenCLException, status) << std::endl;
-                std::exit(1);
+                std::println(stderr, "{}", OpenCLException{status});
+                std::exit(status);
             }
 
             std::cerr << buf.get() << std::endl;

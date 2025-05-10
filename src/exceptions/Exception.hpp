@@ -1,6 +1,7 @@
 #pragma once
 
 #include <exception>
+#include <format>
 #include <source_location>
 
 #define MBQ_MAKE_EXCEPTION(m__type, ...)                                                                               \
@@ -54,17 +55,21 @@ namespace mbq
             return _location;
         }
     };
-
-    inline std::string to_string(const Exception& e)
-    {
-        return std::string{e.location().file_name()} + "(" + std::to_string(e.location().line()) + ")[" +
-               e.location().function_name() + "] " + e.what();
-    }
-
-    inline std::ostream& operator<<(std::ostream& out, const Exception& e)
-    {
-        out << e.location().file_name() << '(' << e.location().line() << ") [" << e.location().function_name() << "] "
-            << e.what();
-        return out;
-    }
 } // namespace mbq
+
+template <typename T>
+    requires std::same_as<T, mbq::Exception> || std::derived_from<T, mbq::Exception>
+struct std::formatter<T>
+{
+    constexpr auto parse(std::format_parse_context& ctx)
+    {
+        return ctx.begin();
+    }
+
+    template <typename FormatContext>
+    auto format(const T& e, FormatContext& ctx) const
+    {
+        return std::format_to(ctx.out(), "{}({})[{}] {}", e.location().file_name(), e.location().line(),
+                              e.location().function_name(), e.what());
+    }
+};
