@@ -41,12 +41,17 @@ namespace mbq
         using allocator_type = typename memory_type::allocator_type;
         using dereferenceable = typename memory_type::dereferenceable;
     private:
-        pointer _ptr{nullptr};
+        pointer _ptr;
     public:
-        MemoryIterator() noexcept = default;
+        MemoryIterator() noexcept : _ptr(nullptr) { }
         MemoryIterator(pointer ptr, allocator_type allocator = allocator_type{}) noexcept
             : base_type(allocator), _ptr(ptr)
         { }
+        MemoryIterator(const MemoryIterator&) noexcept = default;
+        MemoryIterator(MemoryIterator&&) noexcept = default;
+        MemoryIterator& operator=(const MemoryIterator&) noexcept = default;
+        MemoryIterator& operator=(MemoryIterator&&) noexcept = default;
+        ~MemoryIterator() noexcept = default;
 
         auto operator==(const MemoryIterator& rhs) const noexcept
         {

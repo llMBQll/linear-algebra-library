@@ -13,7 +13,7 @@ namespace mbq
         using value_type = T;
 
         template <typename ConstIter, typename Iter>
-        void operator()(T alpha, ConstIter x_begin, ConstIter x_end, Iter y_begin, Iter y_end) const
+        void operator()(T alpha, ConstIter x_begin, ConstIter x_end, Iter y_begin, Iter) const
         {
             auto [x, x_off] = (&(*x_begin)).get();
             auto [y, y_off] = (&(*y_begin)).get();

@@ -15,7 +15,7 @@ namespace mbq
         using value_type = T;
 
         template <typename ConstIter, typename Iter>
-        void operator()(T alpha, ConstIter x_begin, ConstIter x_end, Iter y_begin, Iter y_end) const
+        void operator()(T alpha, ConstIter x_begin, ConstIter x_end, Iter y_begin, Iter) const
         {
             const T* x = &(*x_begin);
             T* y = &(*y_begin);
