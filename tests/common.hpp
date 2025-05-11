@@ -82,3 +82,20 @@ constexpr inline bool is_complex_v = is_complex_t<T>::value;
 
 template <typename T>
 concept complex = is_complex_v<T>;
+
+template <typename T, typename U>
+T make_value(const U& value)
+{
+    if constexpr (std::same_as<std::complex<float>, T>)
+    {
+        return T{static_cast<float>(value), 0};
+    }
+    else if constexpr (std::same_as<std::complex<double>, T>)
+    {
+        return T{static_cast<double>(value), 0};
+    }
+    else
+    {
+        return static_cast<T>(value);
+    }
+}

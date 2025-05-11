@@ -93,17 +93,17 @@ namespace mbq
         inline Kernel<Bufs<double>, Args<unsigned int, cl_mem>> mt19937_random_bufferd("mt19937_random_buffer_d",
                                                                                        mt19937_random_bufferd_src);
 
-        inline void mt19937_random_buffer(Context* ctx, Pointer<float> ptr, size_t count, cl_mem state)
+        inline void mt19937_random_buffer(Context* ctx, Pointer<float> ptr, uint32_t count, cl_mem state)
         {
             mt19937_random_buffers(ctx, ptr, count, state, execution_policy::sequential{});
         }
 
-        inline void mt19937_random_buffer(Context* ctx, Pointer<double> ptr, size_t count, cl_mem state)
+        inline void mt19937_random_buffer(Context* ctx, Pointer<double> ptr, uint32_t count, cl_mem state)
         {
             mt19937_random_bufferd(ctx, ptr, count, state, execution_policy::sequential{});
         }
 
-        inline void mt19937_random_buffer(Context* ctx, Pointer<std::complex<float>> ptr, size_t count, cl_mem state)
+        inline void mt19937_random_buffer(Context* ctx, Pointer<std::complex<float>> ptr, uint32_t count, cl_mem state)
         {
             auto [mem, offset] = ptr.get();
             Pointer<float> cast_ptr{mem, offset * 2};
@@ -111,7 +111,7 @@ namespace mbq
             mt19937_random_buffers(ctx, cast_ptr, count * 2, state, execution_policy::sequential{});
         }
 
-        inline void mt19937_random_buffer(Context* ctx, Pointer<std::complex<double>> ptr, size_t count, cl_mem state)
+        inline void mt19937_random_buffer(Context* ctx, Pointer<std::complex<double>> ptr, uint32_t count, cl_mem state)
         {
             auto [mem, offset] = ptr.get();
             Pointer<double> cast_ptr{mem, offset * 2};
@@ -128,8 +128,7 @@ namespace mbq
             {
                 Allocator<State> allocator(ctx);
                 _state = allocator.allocate(1);
-                mt19937_init_state(ctx, _state, 1, static_cast<uint32_t>(std::random_device{}()),
-                                   execution_policy::sequential{});
+                mt19937_init_state(ctx, _state, 1, std::random_device{}(), execution_policy::sequential{});
             }
             MT19937(const MT19937&) = delete;
             MT19937(MT19937&&) noexcept = default;
@@ -166,7 +165,7 @@ namespace mbq
             auto& engine = opencl::detail::get_default_engine(ctx);
             auto [state, _] = engine._state.get();
 
-            opencl::detail::mt19937_random_buffer(ctx, ptr, count, state);
+            opencl::detail::mt19937_random_buffer(ctx, ptr, static_cast<uint32_t>(count), state);
 
             return last;
         }

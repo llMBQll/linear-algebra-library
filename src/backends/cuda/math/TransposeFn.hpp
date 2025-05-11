@@ -12,7 +12,7 @@ namespace mbq
     namespace cuda::detail
     {
         template <typename T>
-        cublasStatus_t transpose(cublasHandle_t handle, const T* in, T* out, size_t rows, size_t cols)
+        cublasStatus_t transpose(cublasHandle_t handle, const T* in, T* out, int rows, int cols)
         {
             const T alpha{1};
             const T beta{0};
@@ -45,7 +45,7 @@ namespace mbq
             T* out = &(*out_begin);
             auto handle = out_begin.get_allocator().state()->handle;
 
-            auto status = cuda::detail::transpose(handle, in, out, rows, cols);
+            auto status = cuda::detail::transpose(handle, in, out, static_cast<int>(rows), static_cast<int>(cols));
             if (status != cublasStatus_t::CUBLAS_STATUS_SUCCESS)
                 MBQ_THROW_EXCEPTION(CublasException, status);
         }
