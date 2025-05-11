@@ -14,3 +14,8 @@ target_include_directories(linear-algebra-library-ut PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}")
 target_link_libraries(linear-algebra-library-ut gmock gtest linear-algebra-library)
+if (MSVC)
+    target_compile_options(linear-algebra-library-ut PRIVATE /W4 /WX)
+else ()
+    target_compile_options(linear-algebra-library-ut PRIVATE -Wall -Wextra -Werror)
+endif ()
