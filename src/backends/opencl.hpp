@@ -1,6 +1,6 @@
 #pragma once
 
-#if MBQ_ENABLE_OPENCL
+#if MBQ_OPENCL_BACKEND == ON
     #include "backends/opencl/algorithm.hpp"
     #include "backends/opencl/math.hpp"
     #include "backends/opencl/memory.hpp"

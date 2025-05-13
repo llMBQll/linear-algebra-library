@@ -59,7 +59,7 @@ TYPED_TEST_P(ArrayTest, SubscriptOperator)
 
     array_t array(5, 20, 5, 8);
     ASSERT_EQ(array.size(), 5 * 20 * 5 * 8);
-    std::ranges::generate(array, [i = 0]() mutable { return make_value<value_type>(i); });
+    std::ranges::generate(array, [i = 0]() mutable { return make_value<value_type>(i++); });
 
     int v = 0;
     for (size_t i = 0; i < 5; ++i)

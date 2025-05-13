@@ -6,11 +6,11 @@
 #include "memory/Memory.hpp"
 #include "memory/MemoryView.hpp"
 
-#if MBQ_ENABLE_CUDA
+#if MBQ_CUDA_BACKEND == ON
     #include "backends/cuda/memory.hpp"
 #endif
 
-#if MBQ_ENABLE_OPENCL
+#if MBQ_OPENCL_BACKEND == ON
     #include "backends/opencl/memory.hpp"
 #endif
 
@@ -28,7 +28,7 @@ namespace mbq
     template <non_void T>
     using HostMemoryView = mbq::MemoryView<T, mbq::host::Allocator<T>>;
 
-#if MBQ_ENABLE_CUDA
+#if MBQ_CUDA_BACKEND == ON
     template <non_void T, size_t N>
     using CudaArray = mbq::Array<T, mbq::cuda::Allocator<T>, N>;
 
@@ -42,7 +42,7 @@ namespace mbq
     using CudaMemoryView = mbq::MemoryView<T, mbq::cuda::Allocator<T>>;
 #endif
 
-#if MBQ_ENABLE_OPENCL
+#if MBQ_OPENCL_BACKEND == ON
     template <non_void T, size_t N>
     using OpenCLArray = mbq::Array<T, mbq::opencl::Allocator<T>, N>;
 
