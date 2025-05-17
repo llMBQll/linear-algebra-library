@@ -22,10 +22,12 @@ namespace mbq::opencl
         state_type* _state;
     public:
         constexpr Allocator() noexcept : _state(state_type::get_default()) { }
-
         constexpr explicit Allocator(state_type* state) noexcept : _state(state) { }
-
         constexpr Allocator(const Allocator&) noexcept = default;
+        constexpr Allocator(Allocator&&) noexcept = default;
+        constexpr Allocator& operator=(const Allocator&) noexcept = default;
+        constexpr Allocator& operator=(Allocator&&) noexcept = default;
+        constexpr ~Allocator() noexcept = default;
 
         template <typename Other>
         constexpr explicit Allocator(const Allocator<Other>& other) noexcept : _state(other._state)

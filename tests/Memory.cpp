@@ -25,7 +25,7 @@ TYPED_TEST_P(MemoryTest, Constructor)
 
     std::ranges::generate(memory, [i = 0]() mutable { return static_cast<value_type>(i++); });
     for (size_t i = 0; i < SIZE; ++i)
-        MBQ_EXPECT_EQ(value_type, memory[i], i);
+        MBQ_EXPECT_EQ(value_type, memory[i], make_value<value_type>(i));
 }
 
 TYPED_TEST_P(MemoryTest, ResizeDown)

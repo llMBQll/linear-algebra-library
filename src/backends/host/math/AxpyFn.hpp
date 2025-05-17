@@ -14,7 +14,7 @@ namespace mbq
         using value_type = value_type_of_t<Allocator>;
 
         template <typename ConstIter, typename Iter>
-        void operator()(const value_type& alpha, ConstIter x_begin, ConstIter x_end, Iter y_begin, Iter y_end) const
+        void operator()(const value_type& alpha, ConstIter x_begin, ConstIter x_end, Iter y_begin, Iter) const
         {
             const value_type* x = &(*x_begin);
             value_type* y = &(*y_begin);

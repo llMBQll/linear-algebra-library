@@ -165,7 +165,8 @@ namespace mbq
         auto n = y.dimensions()[1];
         auto k = x.dimensions()[1];
         Array<T, Allocator, N> tmp(m, n);
-        multiply_impl<Allocator>(x.cbegin(), y.cbegin(), y.cbegin(), y.cend(), tmp.begin(), tmp.end(), m, n, k);
+        multiply_impl<Allocator>(x.cbegin(), y.cbegin(), y.cbegin(), y.cend(), tmp.begin(), tmp.end(),
+                                 static_cast<int>(m), static_cast<int>(n), static_cast<int>(k));
         return tmp;
     }
 

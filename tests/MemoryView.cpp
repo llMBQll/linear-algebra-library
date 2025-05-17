@@ -22,7 +22,7 @@ TYPED_TEST_P(MemoryViewTest, FromStd)
     constexpr size_t SIZE = 8;
 
     std::vector<value_type> vec(SIZE, value_type{1});
-    std::ranges::generate(vec, [i = 0]() mutable -> value_type { return i++; });
+    std::ranges::generate(vec, [i = 0]() mutable -> value_type { return make_value<value_type>(i++); });
     auto memory_view = memory_view_type::from(vec.data(), vec.size());
     auto array_view = array_view_type::from(memory_view, {4, 2});
     std::cout << transpose(array_view) << '\n';

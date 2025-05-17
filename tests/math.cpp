@@ -19,7 +19,7 @@ TYPED_TEST_P(MathTest, Axpy)
     using value_type = typename allocator::value_type;
 
     constexpr size_t N = 1'000;
-    value_type alpha = std::numbers::e;
+    const auto alpha = make_value<value_type>(std::numbers::e);
     auto x = mbq::Array<value_type, allocator, 1>::random(N);
     auto y = mbq::Array<value_type, allocator, 1>::random(N);
 
@@ -143,7 +143,7 @@ TYPED_TEST_P(MathTest, Pow)
 
     constexpr size_t N = 1'000;
     auto x = mbq::Array<value_type, allocator, 1>::random(N);
-    pow(x, std::numbers::e);
+    pow(x, make_value<value_type>(std::numbers::e));
 }
 
 REGISTER_TYPED_TEST_SUITE_P(MathTest, Axpy, OperatorPlus, OperatorMultiply, Trigonometric, Pow);

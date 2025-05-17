@@ -6,22 +6,24 @@
 #include <gtest/gtest.h>
 #include <types.hpp>
 
-template <typename T>
+template <typename>
 class ArrayTest : public testing::Test
 { };
 
 TYPED_TEST_SUITE_P(ArrayTest);
 
 template <complex T>
-testing::AssertionResult assert_uniform_distribution(const T& value) noexcept
+testing::AssertionResult assert_uniform_distribution(const T& sum, size_t count) noexcept
 {
+    const auto value = sum / make_value<T>(count).real();
     auto result = (value.real() > 0.48 && value.real() < 0.52) && (value.imag() > 0.48 && value.imag() < 0.52);
     return result ? testing::AssertionSuccess() : testing::AssertionFailure() << value;
 }
 
 template <typename T>
-testing::AssertionResult assert_uniform_distribution(const T& value) noexcept
+testing::AssertionResult assert_uniform_distribution(const T& sum, size_t count) noexcept
 {
+    const auto value = sum / count;
     auto result = value > 0.48 && value < 0.52;
     return result ? testing::AssertionSuccess() : testing::AssertionFailure() << value;
 }
@@ -45,9 +47,8 @@ TYPED_TEST_P(ArrayTest, Fill)
     auto random_array = array_t::random(SIZE);
     ASSERT_EQ(random_array.size(), SIZE);
     auto sum = std::accumulate(random_array.begin(), random_array.end(), value_type{0},
-                               [](const auto& x, auto sum) { return sum + static_cast<value_type>(x); });
-    auto avg = sum / static_cast<value_type>(random_array.size());
-    EXPECT_TRUE(assert_uniform_distribution(avg));
+                               [](const auto& x, auto current) { return current + static_cast<value_type>(x); });
+    EXPECT_TRUE(assert_uniform_distribution(sum, random_array.size()));
 }
 
 TYPED_TEST_P(ArrayTest, SubscriptOperator)
@@ -58,14 +59,14 @@ TYPED_TEST_P(ArrayTest, SubscriptOperator)
 
     array_t array(5, 20, 5, 8);
     ASSERT_EQ(array.size(), 5 * 20 * 5 * 8);
-    std::ranges::generate(array, [i = 0]() mutable { return static_cast<value_type>(i++); });
+    std::ranges::generate(array, [i = 0]() mutable { return make_value<value_type>(i++); });
 
     int v = 0;
     for (size_t i = 0; i < 5; ++i)
         for (size_t j = 0; j < 20; ++j)
             for (size_t k = 0; k < 5; ++k)
                 for (size_t l = 0; l < 8; ++l)
-                    MBQ_EXPECT_EQ(value_type, array[i][j][k][l], v++);
+                    MBQ_EXPECT_EQ(value_type, array[i][j][k][l], make_value<value_type>(v++));
 }
 
 TYPED_TEST_P(ArrayTest, Transpose)

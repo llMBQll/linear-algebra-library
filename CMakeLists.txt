@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.17)
 
-option(MBQ_ENABLE_CUDA "Enable CUDA backed implementation" ON)
-option(MBQ_ENABLE_OPENCL "Enable OpenCL backed implementation" ON)
-option(MBQ_COMPILE_TESTS "Compile unit tests for the library" OFF)
+option(MBQ_CUDA_BACKEND "Enable CUDA backed implementation" ON)
+option(MBQ_OPENCL_BACKEND "Enable OpenCL backed implementation" ON)
+option(MBQ_TESTS "Compile unit tests for the library" OFF)
 
-if (MBQ_ENABLE_CUDA)
+if (MBQ_CUDA_BACKEND)
     project(linear-algebra-library CXX CUDA)
 else ()
     project(linear-algebra-library CXX)
@@ -27,7 +27,7 @@ include_directories("${MBQ_OPENBLAS_INCLUDE_DIRECTORY}")
 find_package(OpenBLAS CONFIG REQUIRED)
 
 # Collect all files for Host backend
-set(MBQ_HOST_BACKEND
+set(MBQ_HOST_BACKEND_SOURCES
         src/backends/host/algorithm/FillFn.hpp src/backends/host/algorithm/RandomFn.hpp
         src/backends/host/math/ArithmeticFn.hpp src/backends/host/math/AxpyFn.hpp src/backends/host/math/PowFn.hpp
         src/backends/host/math/SinFn.hpp src/backends/host/math/TransposeFn.hpp
@@ -35,12 +35,12 @@ set(MBQ_HOST_BACKEND
         src/backends/host/algorithm.hpp src/backends/host/math.hpp src/backends/host/memory.hpp
         src/backends/host.hpp)
 
-set(MBQ_SOURCES ${MBQ_SOURCES} ${MBQ_HOST_BACKEND})
+set(MBQ_SOURCES ${MBQ_SOURCES} ${MBQ_HOST_BACKEND_SOURCES})
 
 ##################### Configure CUDA #####################
-add_compile_definitions(MBQ_ENABLE_CUDA=${MBQ_ENABLE_CUDA})
+add_compile_definitions(MBQ_CUDA_BACKEND=${MBQ_CUDA_BACKEND})
 
-if (${MBQ_ENABLE_CUDA})
+if (${MBQ_CUDA_BACKEND})
     set(CMAKE_CUDA_STANDARD 20)
     set(CMAKE_CUDA_ARCHITECTURES "75")
     find_package(CUDAToolkit)
@@ -58,7 +58,7 @@ if (${MBQ_ENABLE_CUDA})
     target_link_libraries(linear-algebra-library-cuda CUDA::cudart_static CUDA::cublas CUDA::curand)
 
     # Collect all files for CUDA backend
-    set(MBQ_CUDA_BACKEND
+    set(MBQ_CUDA_BACKEND_SOURCES
             src/backends/cuda/algorithm/detail/fill.cuh src/backends/cuda/algorithm/FillFn.hpp
             src/backends/cuda/algorithm/detail/random.cuh src/backends/cuda/algorithm/RandomFn.hpp
             src/backends/cuda/exceptions/CublasException.hpp src/backends/cuda/exceptions/CudaException.hpp
@@ -71,18 +71,18 @@ if (${MBQ_ENABLE_CUDA})
             src/backends/cuda/algorithm.hpp src/backends/cuda/math.hpp src/backends/cuda/memory.hpp
             src/backends/cuda.hpp)
 
-    set(MBQ_SOURCES ${MBQ_SOURCES} ${MBQ_CUDA_BACKEND})
+    set(MBQ_SOURCES ${MBQ_SOURCES} ${MBQ_CUDA_BACKEND_SOURCES})
 endif ()
 
 #################### Configure OpenCL ####################
-add_compile_definitions(MBQ_ENABLE_OPENCL=${MBQ_ENABLE_OPENCL})
+add_compile_definitions(MBQ_OPENCL_BACKEND=${MBQ_OPENCL_BACKEND})
 
-if (${MBQ_ENABLE_OPENCL})
+if (${MBQ_OPENCL_BACKEND})
     find_package(OpenCL REQUIRED)
     find_package(CLBlast CONFIG REQUIRED)
 
     # Collect all files for OpenCL backend
-    set(MBQ_OPENCL_BACKEND
+    set(MBQ_OPENCL_BACKEND_SOURCES
             src/backends/opencl/algorithm/FillFn.hpp src/backends/opencl/algorithm/RandomFn.hpp
             src/backends/opencl/exceptions/CLBlastException.hpp src/backends/opencl/exceptions/OpenCLException.hpp
             src/backends/opencl/kernels/Kernel.hpp
@@ -95,7 +95,7 @@ if (${MBQ_ENABLE_OPENCL})
             src/backends/opencl/math.hpp src/backends/opencl/memory.hpp
             src/backends/opencl.hpp)
 
-    set(MBQ_SOURCES ${MBQ_SOURCES} ${MBQ_OPENCL_BACKEND})
+    set(MBQ_SOURCES ${MBQ_SOURCES} ${MBQ_OPENCL_BACKEND_SOURCES})
 endif ()
 
 add_library(linear-algebra-library INTERFACE ${MBQ_SOURCES})
@@ -104,17 +104,17 @@ add_library(linear-algebra-library INTERFACE ${MBQ_SOURCES})
 target_link_libraries(linear-algebra-library INTERFACE OpenBLAS::OpenBLAS)
 
 # CUDA
-if (${MBQ_ENABLE_CUDA})
+if (${MBQ_CUDA_BACKEND})
     target_include_directories(linear-algebra-library INTERFACE "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}")
     target_link_libraries(linear-algebra-library INTERFACE linear-algebra-library-cuda)
 endif ()
 
 # OpenCL
-if (${MBQ_ENABLE_OPENCL})
+if (${MBQ_OPENCL_BACKEND})
     target_link_libraries(linear-algebra-library INTERFACE OpenCL::OpenCL)
     target_link_libraries(linear-algebra-library INTERFACE clblast)
 endif ()
 
-if (${MBQ_COMPILE_TESTS})
+if (${MBQ_TESTS})
     add_subdirectory(tests)
 endif ()
